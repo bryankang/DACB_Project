@@ -92,6 +92,12 @@ class LogisticRegression:
             predictions.append(sigmoid_forward(prediction))
         return predictions
             
+    def predict_sequence(self, X):
+        p = []
+        predictions = self.predict(X)
+        for prediction in predictions:
+            p.append(sigmoid_forward(prediction))
+        return p
     
     def _init_weights(self, num_weights):
         self.weights = [random.random()*1e-3 for _ in range(num_weights)]
@@ -99,4 +105,13 @@ class LogisticRegression:
     def save_weights(self, filename):
         with open(filename, "w") as weight_file:
             for weight in self.weights:
-                weight_file.write("{}\n".format(weight))          
+                weight_file.write("{}\n".format(weight))     
+
+    def load_weights(self, filename):
+        weights = []
+        with open(filename, "r") as weight_file:
+            for line in weight_file:
+                weight = float(line.strip())
+                weights.append(weight)
+        self.weights = weights
+
