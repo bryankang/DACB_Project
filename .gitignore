@@ -10,3 +10,5 @@ Project3/Data
 Project3/nr
 *.sqlite
 Project4/data
+Project4/*.log
+Project4/*.mdl
