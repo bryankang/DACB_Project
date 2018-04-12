@@ -14,5 +14,5 @@ if __name__ == "__main__":
     clf.fit(X, Y, train_index, test_index, verbose=True)
     clf.save_weights("test.mdl")
 
-    predictions = clf.predict_sequence(X)
-    predictions.sort(reverse=True)
+    predictions = clf.predict_sequences(X, test_index)
+    clf.eval_accuracy(predictions, Y, test_index)

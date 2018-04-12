@@ -105,12 +105,21 @@ class LogisticRegression:
             predictions.append(sigmoid_forward(prediction))
         return predictions
             
-    def predict_sequence(self, X):
-        p = []
-        predictions = self.predict(X)
-        for prediction in predictions:
-            p.append(sigmoid_forward(prediction))
-        return p
+    def predict_sequences(self, X, test_indices):
+        batch_indices = get_batch_index(test_indices)
+        batch_X = Get_Data(X, X, batch_indices)
+
+        predictions = []
+        for sequences in batch_X:
+            seq_predictions = []
+            for sequence in sequences:
+                prediction = 0
+                for feature, weight in zip(sequence, self.weights):
+                    prediction += feature*weight
+                seq_predictions.append(sigmoid_forward(prediction))
+            predictions.append(seq_predictions)
+
+        return predictions
     
     def _init_weights(self, num_weights):
         self.weights = [random.random()*1e-3 for _ in range(num_weights)]
@@ -128,3 +137,16 @@ class LogisticRegression:
                 weights.append(weight)
         self.weights = weights
 
+    def eval_accuracy(self, predictions, Y, test_indices):
+        batch_indices = get_batch_index(test_indices)
+        batch_Y = Get_Data(Y, Y, batch_indices)
+        print(batch_Y)
+        correct = 0
+        total = 0.0
+        
+        for p_seq, a_seq in zip(predictions, batch_Y):
+            for p_label, a_label in zip(p_seq, a_seq):
+                if p_label > sigmoid_forward(a_label):
+                    correct = correct+1
+
+        return correct / total
